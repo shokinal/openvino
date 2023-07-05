@@ -732,21 +732,24 @@ std::shared_ptr<Node> NetworkHelper::foldFakeQuantize(
         }
     }
 
-    if (ov::is_type<opset1::Constant>(fq->get_input_node_shared_ptr(0))) {
-        std::shared_ptr<Node> subgraph = std::make_shared<ov::op::TypeRelaxed<opset1::FakeQuantize>>(*fq, element::f32);
-        const auto& original_et = fq->get_output_element_type(0);
-        const bool roundValues = roundValuesWasSet ? roundValuesArg : original_et.is_integral();
-        if (roundValues) {
-            subgraph = std::make_shared<opset6::Round>(subgraph, opset6::Round::RoundMode::HALF_TO_EVEN);
-        }
+    // TODO:
+    //    1) just to debug: FQ has to be still on weight path
+    //    2) FqkeQuantize on data path has to be per-tensor quantization only
+    // if (ov::is_type<opset1::Constant>(fq->get_input_node_shared_ptr(0))) {
+    //     std::shared_ptr<Node> subgraph = std::make_shared<ov::op::TypeRelaxed<opset1::FakeQuantize>>(*fq, element::f32);
+    //     const auto& original_et = fq->get_output_element_type(0);
+    //     const bool roundValues = roundValuesWasSet ? roundValuesArg : original_et.is_integral();
+    //     if (roundValues) {
+    //         subgraph = std::make_shared<opset6::Round>(subgraph, opset6::Round::RoundMode::HALF_TO_EVEN);
+    //     }
 
-        OPENVINO_SUPPRESS_DEPRECATED_START
-        const auto result = ov::get_constant_from_source(subgraph);
-        OPENVINO_SUPPRESS_DEPRECATED_END
-        if (result != nullptr) {
-            return foldConvert(result, original_et);
-        }
-    }
+    //     OPENVINO_SUPPRESS_DEPRECATED_START
+    //     const auto result = ov::get_constant_from_source(subgraph);
+    //     OPENVINO_SUPPRESS_DEPRECATED_END
+    //     if (result != nullptr) {
+    //         return foldConvert(result, original_et);
+    //     }
+    // }
 
     return fq;
 }

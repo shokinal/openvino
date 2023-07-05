@@ -358,9 +358,10 @@ bool WeightableLayerTransformation::decomposeFakeQuantizeForWeightsPath(const st
         return false;
     }
 
-    if (ov::as_type_ptr<ngraph::opset1::Constant>(fqOnWeights) == nullptr) {
-        THROW_IE_LPT_EXCEPTION(*fqOnWeights) << "FakeQuantize on weights was not folded to constant";
-    }
+    // TODO: debug only
+    // if (ov::as_type_ptr<ngraph::opset1::Constant>(fqOnWeights) == nullptr) {
+    //     THROW_IE_LPT_EXCEPTION(*fqOnWeights) << "FakeQuantize on weights was not folded to constant";
+    // }
 
     return true;
 }

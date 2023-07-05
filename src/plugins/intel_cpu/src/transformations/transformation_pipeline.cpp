@@ -86,6 +86,7 @@
 #include "low_precision/convert_subtract_constant.hpp"
 #include "low_precision/convolution_backprop_data.hpp"
 #include "low_precision/group_convolution.hpp"
+#include "low_precision/multiply_vpu.hpp"
 #include "low_precision/multiply_to_group_convolution.hpp"
 #include "low_precision/network_helper.hpp"
 #include "low_precision/rt_info/bias_attribute.hpp"
@@ -547,6 +548,7 @@ void Transformations::Lpt(const bool hasINT16orINT32Levels, const std::vector<ov
         });
 
     CPU_DISABLE_PASS_COMMON(lptManager, ngraph::pass::low_precision::MultiplyToGroupConvolutionTransformation);
+    CPU_DISABLE_PASS_COMMON(lptManager, ngraph::pass::low_precision::MultiplyVpuTransformation);
 
     lptManager.run_passes(model);
 }
